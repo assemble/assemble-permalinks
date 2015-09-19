@@ -1,0 +1,50 @@
+{
+  "name": "assemble-permalinks",
+  "description": "Permalinks plugin for assemble. (0.6+)",
+  "version": "0.1.0",
+  "homepage": "https://github.com/jonschlinkert/assemble-permalinks",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "repository": "jonschlinkert/assemble-permalinks",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/assemble-permalinks/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "mixin-deep": "^1.1.3",
+    "parse-filepath": "^0.6.3",
+    "placeholders": "^0.2.0"
+  },
+  "devDependencies": {
+    "assemble": "assemble/assemble#dev",
+    "gulp": "^3.9.0",
+    "gulp-istanbul": "^0.10.0",
+    "gulp-jshint": "^1.11.2",
+    "gulp-mocha": "^2.1.3",
+    "jshint-stylish": "^2.0.1",
+    "mocha": "*",
+    "rimraf": "^2.4.3",
+    "should": "*",
+    "templates-indexer": "^0.1.1"
+  },
+  "keywords": [
+    "assembleplugin",
+    "dest",
+    "destination",
+    "path",
+    "permalink",
+    "permalinks",
+    "plugin",
+    "rewrite",
+    "url"
+  ]
+}
