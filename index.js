@@ -7,61 +7,90 @@
 
 'use strict';
 
-var merge = require('mixin-deep');
-var parsePath = require('parse-filepath');
-var placeholders = require('placeholders');
-
-function permalink(pattern, options) {
-  options = options || {};
-
-  return function(app) {
-    var data = app.get('cache.data');
-    var opts = merge({}, data, options);
-
-    if (app.isView) {
-      return toPermalink(pattern, app, opts);
-    }
-
-    return function(views) {
-      if (views.isView) {
-        return toPermalink(pattern, views, opts);
-      }
-
-      return function(view) {
-        return toPermalink(pattern, view, opts);
-      };
-    };
-  };
-}
-
-function toPermalink(pattern, app, options) {
-  options = merge({regex: /:([(\w ),.]+)/}, options, app.options.permalinks);
-  pattern = pattern || options.pattern;
-  var fn = placeholders(options);
-
-  app.permalink = function permalink(dest, opts) {
-    if (typeof dest !== 'string') {
-      opts = dest;
-      dest = null;
-    }
-
-    var data = parsePath(this.path);
-    var ctx = merge({}, options, data, opts);
-    ctx.pagination = ctx.pagination || {};
-    pattern = dest || ctx.pattern || pattern || ':path';
-    this.data.permalink = pattern;
-    this.url = fn(pattern, ctx);
-    return this;
-  };
-
-  if (pattern && pattern.indexOf(':') > -1) {
-    return app.permalink();
-  }
-  return app;
-}
+var path = require('path');
+var utils = require('./utils');
 
 /**
  * Expose `permalink`
  */
 
-module.exports = permalink;
+module.exports = function permalinksPlugin(pattern, config) {
+  if (utils.isObject(pattern)) {
+    config = pattern;
+    pattern = null;
+  }
+
+  config = utils.merge({regex: /:([(\w ),.]+)/}, config);
+
+  return function plugin(app) {
+    if (!app.isView && !app.isItem) {
+      return plugin;
+    }
+
+    var options = utils.merge({}, config, this.options.permalinks);
+
+    this.define('permalink', function(dest, opts) {
+      if (typeof dest !== 'string') {
+        opts = dest;
+        dest = null;
+      }
+
+      var ctx = utils.merge({}, options, this.data, opts);
+      var parse = ctx.parsePath || this.parsePath;
+      var paths = copyPaths(this, parse);
+
+      // merge in paths before context, so custom values
+      // passed on the options will override parsed values
+      ctx = utils.merge({}, paths, ctx);
+
+      try {
+        var fn = utils.placeholders(ctx);
+        pattern = dest || ctx.pattern || ':path';
+
+        // set the pattern on `options.permalink`
+        this.options.permalink = pattern;
+
+        // add the rendered permalink (path) to `data.permalink`
+        this.data.permalink = fn(pattern, ctx);
+      } catch (err) {
+        err.reason = 'permalinks parsing error';
+        throw err;
+      }
+      return this;
+    });
+
+    /**
+     * Support passing the permalink pattern to the plugin
+     */
+
+    if (this.isView && pattern && pattern.indexOf(':') > -1) {
+      return this.permalink(pattern);
+    }
+  };
+};
+
+/**
+ * Since views are vinyl files and paths are getters/setters,
+ * we need to copy paths from `view` onto a plain object
+ */
+
+function copyPaths(view, fn) {
+  var paths = {};
+  paths.cwd = view.cwd;
+  paths.base = view.base;
+  paths.path = view.path;
+  paths.absolute = path.resolve(view.path);
+  paths.dirname = view.dirname;
+  paths.relative = view.relative;
+  paths.basename = view.basename;
+  paths.extname = view.extname;
+  paths.ext = view.extname;
+
+  paths.filename = view.stem;
+  paths.name = view.stem;
+  paths.stem = view.stem;
+  if (typeof fn === 'function') {
+    fn(paths);
+  }
+  return paths;
+}
