@@ -1,6 +1,6 @@
 {
   "name": "assemble-permalinks",
-  "description": "Permalinks plugin for assemble. (0.6+)",
+  "description": "Assemble plugin for easily creating permalinks (Assemble ^0.6.0)",
   "version": "0.1.0",
   "homepage": "https://github.com/jonschlinkert/assemble-permalinks",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
@@ -10,7 +10,8 @@
   },
   "license": "MIT",
   "files": [
-    "index.js"
+    "index.js",
+    "utils.js"
   ],
   "main": "index.js",
   "engines": {
@@ -20,21 +21,20 @@
     "test": "mocha"
   },
   "dependencies": {
+    "isobject": "^2.0.0",
+    "lazy-cache": "^1.0.2",
     "mixin-deep": "^1.1.3",
-    "parse-filepath": "^0.6.3",
     "placeholders": "^0.2.0"
   },
   "devDependencies": {
-    "assemble": "assemble/assemble#dev",
+    "assemble-core": "^0.7.0",
+    "assemble-indexer": "^0.1.2",
     "gulp": "^3.9.0",
-    "gulp-istanbul": "^0.10.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-mocha": "^2.1.3",
-    "jshint-stylish": "^2.0.1",
+    "gulp-eslint": "^1.1.1",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-mocha": "^2.2.0",
     "mocha": "*",
-    "rimraf": "^2.4.3",
-    "should": "*",
-    "templates-indexer": "^0.1.1"
+    "templates": "^0.8.1"
   },
   "keywords": [
     "assembleplugin",
@@ -46,5 +46,17 @@
     "plugin",
     "rewrite",
     "url"
-  ]
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "assemble",
+        "templates"
+      ]
+    },
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "layout": "default"
+  }
 }
