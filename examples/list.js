@@ -4,8 +4,7 @@ var path = require('path');
 var indexer = require('assemble-indexer');
 var assemble = require('assemble-core');
 var List = assemble.List;
-
-var permalink = require('./');
+var permalink = require('..');
 var app = assemble();
 
 app.create('post', {
