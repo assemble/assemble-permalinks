@@ -8,6 +8,7 @@
 'use strict';
 
 var path = require('path');
+var through = require('through2');
 var utils = require('./utils');
 
 /**
@@ -20,10 +21,26 @@ module.exports = function permalinksPlugin(pattern, config) {
     pattern = null;
   }
 
-  config = utils.merge({regex: /:([(\w ),.]+)/}, config);
+  config = utils.merge({ regex: /:([(\w ),.]+)/ }, config);
 
   return function plugin(app) {
+
     if (!app.isView && !app.isItem) {
+      app.emit('plugin', 'permalinks', this);
+
+      app.define('permalink', function(viewPattern, data) {
+        return through.obj(function(view, enc, next) {
+          var structure = viewPattern || pattern;
+          try {
+            view.permalink(structure, data);
+            var fp = path.resolve(view.data.permalink);
+            view.path = path.resolve(view.base, fp);
+            next(null, view);
+          } catch (err) {
+            next(err);
+          }
+        });
+      });
       return plugin;
     }
 
@@ -63,7 +80,7 @@ module.exports = function permalinksPlugin(pattern, config) {
      * Support passing the permalink pattern to the plugin
      */
 
-    if (this.isView && pattern && pattern.indexOf(':') > -1) {
+    if (typeof pattern === 'string') {
       return this.permalink(pattern);
     }
   };
