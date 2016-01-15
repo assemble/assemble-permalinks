@@ -22,9 +22,9 @@ module.exports = function permalinksPlugin(pattern, config) {
   }
 
   config = utils.merge({ regex: /:([(\w ),.]+)/ }, config);
+  var args = [].slice.call(arguments);
 
   return function plugin(app) {
-
     if (!app.isView && !app.isItem) {
       app.emit('plugin', 'permalinks', this);
 
@@ -44,14 +44,15 @@ module.exports = function permalinksPlugin(pattern, config) {
       return plugin;
     }
 
-    var options = utils.merge({}, config, this.options.permalinks);
-
     this.define('permalink', function(dest, opts) {
       if (typeof dest !== 'string') {
         opts = dest;
         dest = null;
       }
 
+      this.emit('permalink', this);
+
+      var options = utils.merge({}, config, this.options.permalinks);
       var ctx = utils.merge({}, options, this.data, opts);
       var parse = ctx.parsePath || this.parsePath;
       var paths = copyPaths(this, parse);
@@ -69,6 +70,7 @@ module.exports = function permalinksPlugin(pattern, config) {
 
         // add the rendered permalink (path) to `data.permalink`
         this.data.permalink = fn(pattern, ctx);
+
       } catch (err) {
         err.reason = 'permalinks parsing error';
         throw err;
@@ -81,7 +83,7 @@ module.exports = function permalinksPlugin(pattern, config) {
      */
 
     if (typeof pattern === 'string') {
-      return this.permalink(pattern);
+      return this.permalink.apply(this, args);
     }
   };
 };
