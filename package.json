@@ -1,7 +1,7 @@
 {
   "name": "assemble-permalinks",
   "description": "Assemble plugin for easily creating permalinks (Assemble ^0.6.0)",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "homepage": "https://github.com/jonschlinkert/assemble-permalinks",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "jonschlinkert/assemble-permalinks",
@@ -40,15 +40,29 @@
     "through2": "^2.0.0"
   },
   "keywords": [
+    "assemble",
     "assembleplugin",
+    "blog",
     "dest",
     "destination",
+    "filepath",
+    "format",
+    "link",
     "path",
     "permalink",
     "permalinks",
+    "permanent",
     "plugin",
+    "post",
+    "pretty",
     "rewrite",
-    "url"
+    "rewriting",
+    "route",
+    "routes",
+    "routing",
+    "uri",
+    "url",
+    "url-routing"
   ],
   "verb": {
     "related": {
