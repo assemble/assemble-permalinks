@@ -67,6 +67,20 @@ describe('permalinks', function() {
     assert(post.data.permalink === 'aaa.html');
   });
 
+  it('should support passing the plugin to a view and executing immediately:', function() {
+    app.create('posts');
+
+    app.post('a/b/aaa.txt', {content: '...'});
+    app.post('a/b/bbb.txt', {content: '...'});
+    app.post('a/b/ccc.txt', {content: '...'});
+
+    var post = app.posts.getView('a/b/aaa.txt')
+      .use(permalink(':name.html'));
+
+    assert(typeof post.permalink === 'function');
+    assert(post.data.permalink === 'aaa.html');
+  });
+
   it('should support passing the pattern to the plugin', function() {
     app.create('posts')
       .use(permalink('foo/:name.html'));
@@ -81,6 +95,25 @@ describe('permalinks', function() {
     assert(post.data.permalink === 'foo/aaa.html');
   });
 
+  it('should support passing the config to the plugin', function() {
+    app.create('posts')
+      .use(permalink({
+        foo: function(name) {
+          return 'bar-' + name + '.html';
+        }
+      }));
+
+    app.post('a/b/aaa.txt', {content: '...'});
+    app.post('a/b/bbb.txt', {content: '...'});
+    app.post('a/b/ccc.txt', {content: '...'});
+
+    var post = app.posts.getView('a/b/aaa.txt');
+    assert(typeof post.permalink === 'function');
+
+    post.permalink('dist/:foo(name)');
+    assert(post.data.permalink === 'dist/bar-aaa.html');
+  });
+
   it('should expose a `permalink` method on `app`', function() {
     app.use(permalink());
     assert(typeof app.permalink === 'function');
@@ -92,6 +125,28 @@ describe('permalinks', function() {
     app.task('site', function() {
       return app.src('*.js')
         .pipe(app.permalink('actual/:name/index.html'))
+        .pipe(app.dest('.'));
+    });
+
+    app.build('site', function(err) {
+      if (err) return cb(err);
+      rimraf('actual', cb);
+    });
+  });
+
+  it('should handle errors in the pipeline plugin', function(cb) {
+    app.use(permalink({
+      foo: function(name) {
+        return 'bar-' + name;
+      }
+    }));
+
+    app.task('site', function() {
+      return app.src('*.js')
+        .pipe(app.permalink('actual/:foo(:name)/index.html'))
+        .on('error', function(err) {
+          if (err) cb();
+        })
         .pipe(app.dest('.'));
     });
 
@@ -167,5 +222,20 @@ describe('permalinks', function() {
 
     assert(typeof post.permalink === 'function');
     assert(post.data.permalink === 'a/b/bar/qux.html');
+  });
+
+  it('should use custom parsePath option', function() {
+    app.create('posts')
+      .use(permalink({
+        parsePath(paths) {
+          paths.foo = 'bar-' + paths.name;
+        }
+      }));
+
+    var post = app.post('a/b/aaa.txt', {content: '...'})
+      .permalink(':dirname/:foo.html');
+
+    assert(typeof post.permalink === 'function');
+    assert(post.data.permalink === 'a/b/bar-aaa.html');
   });
 });
