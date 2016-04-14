@@ -41,6 +41,18 @@ module.exports = function permalinksPlugin(pattern, config) {
           }
         });
       });
+
+      /**
+       * Support passing the permalink pattern to the plugin
+       */
+
+      app.onLoad(/./, function(file, next) {
+        if (typeof pattern === 'string') {
+          file.permalink.apply(file, args);
+        }
+        next();
+      });
+
       return plugin;
     }
 
@@ -77,14 +89,6 @@ module.exports = function permalinksPlugin(pattern, config) {
       }
       return this;
     });
-
-    /**
-     * Support passing the permalink pattern to the plugin
-     */
-
-    if (typeof pattern === 'string') {
-      return this.permalink.apply(this, args);
-    }
   };
 };
 
