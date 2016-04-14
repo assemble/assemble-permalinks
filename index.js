@@ -25,9 +25,14 @@ module.exports = function permalinksPlugin(pattern, config) {
   var args = [].slice.call(arguments);
 
   return function plugin(app) {
-    if (!app.isView && !app.isItem) {
-      app.emit('plugin', 'permalinks', this);
+    if (app.isRegistered('assemble-permalinks')) {
+      if (!app.isView && !app.isItem) {
+        return plugin;
+      }
+      return;
+    }
 
+    if (!app.isView && !app.isItem) {
       app.define('permalink', function(viewPattern, data) {
         return through.obj(function(view, enc, next) {
           var structure = viewPattern || pattern;
