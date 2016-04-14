@@ -9,8 +9,9 @@ var app = assemble()
   .use(loader());
 
 app.create('posts');
+app.posts('./*.js');
 
-app.posts('./*.js')
+app.toStream('posts')
   .pipe(app.permalink('./site/:name/index.html'))
   .pipe(app.dest('.'));
 
