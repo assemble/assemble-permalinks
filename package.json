@@ -27,17 +27,17 @@
     "placeholders": "^0.2.0"
   },
   "devDependencies": {
-    "assemble-core": "^0.7.0",
+    "assemble-core": "^0.16.1",
     "assemble-indexer": "^0.1.2",
-    "assemble-loader": "^0.2.6",
-    "gulp": "^3.9.0",
-    "gulp-eslint": "^1.1.1",
-    "gulp-format-md": "^0.1.4",
-    "gulp-istanbul": "^0.10.3",
+    "assemble-loader": "^0.3.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-format-md": "^0.1.7",
+    "gulp-istanbul": "^0.10.4",
     "gulp-mocha": "^2.2.0",
-    "mocha": "*",
-    "rimraf": "^2.4.4",
-    "through2": "^2.0.0"
+    "mocha": "^2.4.5",
+    "rimraf": "^2.5.2",
+    "through2": "^2.0.1"
   },
   "keywords": [
     "assemble",
