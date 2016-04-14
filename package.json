@@ -1,7 +1,7 @@
 {
   "name": "assemble-permalinks",
   "description": "Assemble plugin for easily creating permalinks (Assemble ^0.6.0)",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "homepage": "https://github.com/assemble/assemble-permalinks",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
   "repository": "assemble/assemble-permalinks",
