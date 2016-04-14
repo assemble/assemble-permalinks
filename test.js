@@ -39,56 +39,6 @@ describe('permalinks', function() {
     app.use(permalink());
   });
 
-  it('should only register the plugin once per app instance', function() {
-    var count = 0;
-    app.on('plugin', function(plugin) {
-      count = count + (plugin === 'assemble-permalinks' ? 1 : 0);
-    });
-    app.use(permalink());
-    app.use(permalink());
-    assert.equal(count, 1);
-  });
-
-  it('should only register the plugin once per collection instance', function() {
-    var count = 0;
-    var posts = app.create('posts');
-    posts.on('plugin', function(plugin) {
-      count = count + (plugin === 'assemble-permalinks' ? 1 : 0);
-    });
-    posts.use(permalink());
-    posts.use(permalink());
-    assert.equal(count, 1);
-  });
-
-  it('should only register the plugin once per app/collection instance', function() {
-    var count = 0;
-    app.on('plugin', function(plugin) {
-      count = count + (plugin === 'assemble-permalinks' ? 1 : 0);
-    });
-    app.use(permalink());
-
-    var posts = app.create('posts');
-    posts.on('plugin', function(plugin) {
-      count = count + (plugin === 'assemble-permalinks' ? 1 : 0);
-    });
-
-    posts.use(permalink());
-    assert.equal(count, 1);
-  });
-
-  it('should only register the plugin once per view instance', function() {
-    var count = 0;
-    var post = app.create('posts')
-      .addView('a/b/aaa.txt', {content: '...'});
-
-    post.on('plugin', function(plugin) {
-      count = count + (plugin === 'assemble-permalinks' ? 1 : 0);
-    });
-    post.use(permalink());
-    post.use(permalink());
-    assert.equal(count, 1);
-  });
-
   it('should support passing the plugin to a collection instance:', function() {
     app.create('posts')
       .use(permalink());
