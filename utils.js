@@ -12,9 +12,11 @@ require = utils;
  * Lazily required module dependencies
  */
 
+require('is-valid-app', 'isValid');
 require('isobject', 'isObject');
 require('mixin-deep', 'merge');
 require('placeholders');
+require('through2', 'through');
 require = fn;
 
 /**

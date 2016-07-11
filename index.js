@@ -8,7 +8,6 @@
 'use strict';
 
 var path = require('path');
-var through = require('through2');
 var utils = require('./utils');
 
 /**
@@ -25,10 +24,9 @@ module.exports = function permalinksPlugin(pattern, config) {
   var args = [].slice.call(arguments);
 
   return function appPlugin(app) {
-    if (!app.isApp) {
+    if (!utils.isValid(app, 'assemble-permalinks')) {
       return collectionPlugin.apply(this, arguments);
     }
-    app.emit('plugin', 'assemble-permalinks');
 
     app.define('permalink', pipeline(pattern));
 
@@ -36,10 +34,14 @@ module.exports = function permalinksPlugin(pattern, config) {
       if (collection.isView || collection.isItem) {
         return viewPlugin.apply(this, arguments);
       }
-      collection.emit('plugin', 'assemble-permalinks');
+
+      if (!utils.isValid(collection, 'assemble-permalinks', ['collection', 'views'])) {
+        return collectionPlugin;
+      }
+
       collection.define('permalink', pipeline(pattern));
 
-      app.onLoad(/./, function(file, next) {
+      collection.onLoad(/./, function(file, next) {
         if (collection.options.plural !== file.options.collection) {
           return next();
         }
@@ -51,7 +53,10 @@ module.exports = function permalinksPlugin(pattern, config) {
       });
 
       function viewPlugin(view) {
-        view.emit('plugin', 'assemble-permalinks');
+        if (!utils.isValid(view, 'assemble-permalinks', ['view', 'item'])) {
+          return;
+        }
+
         this.define('permalink', function(dest, opts) {
           if (typeof dest !== 'string') {
             opts = dest;
@@ -104,7 +109,7 @@ module.exports = function permalinksPlugin(pattern, config) {
 
 function pipeline(pattern) {
   return function(viewPattern, data) {
-    return through.obj(function(view, enc, next) {
+    return utils.through.obj(function(view, enc, next) {
       var structure = viewPattern || pattern;
       try {
         view.permalink(structure, data);
