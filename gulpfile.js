@@ -4,6 +4,7 @@ var gulp = require('gulp');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 var eslint = require('gulp-eslint');
+var permalinks = require('./');
 
 gulp.task('coverage', function() {
   return gulp.src(['index.js', 'utils.js'])

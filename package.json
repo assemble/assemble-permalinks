@@ -11,6 +11,8 @@
   "license": "MIT",
   "files": [
     "index.js",
+    "LICENSE",
+    "README.md",
     "utils.js"
   ],
   "main": "index.js",
@@ -21,6 +23,8 @@
     "test": "mocha"
   },
   "dependencies": {
+    "define-property": "^0.2.5",
+    "is-valid-app": "^0.2.0",
     "isobject": "^2.0.0",
     "lazy-cache": "^1.0.3",
     "mixin-deep": "^1.1.3",
