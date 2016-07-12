@@ -1,10 +1,9 @@
 'use strict';
 
 var path = require('path');
-var indexer = require('assemble-indexer');
 var assemble = require('assemble-core');
 var List = assemble.List;
-var permalink = require('..');
+var permalinks = require('..');
 var app = assemble();
 
 app.create('post', {
@@ -13,15 +12,11 @@ app.create('post', {
   }
 });
 
-var index = app.view({path: 'index.hbs', content: 'index'})
-  .use(permalink(':index(pagination.idx):name.html', {
-    index: function(i) {
-      return i ? ((i + 1) + '/') : '';
-    }
-  }));
+app.create('list')
+  .addView('archives', {path: 'index.hbs', content: 'index'})
+  .addView('archive', {path: 'archive.hbs', content: 'archive'});
 
-app.create('archives')
-  .use(indexer({view: index}));
+var archives = app.group('archives', app.posts, app.lists);
 
 // placeholders('/site/blog/:path', {path: 'foo-bar.md'});
 app.data({base: 'dist'});
@@ -38,15 +33,19 @@ app.posts({
   'a/b/c/j.txt': {locals: {base: '_gh_posts/blog'}, content: 'jjj'}
 });
 
-var list = new List(app.posts);
-var pages = list.paginate({limit: 3});
+archives.create('archives', {
+  all: true,
+  paginate: { limit: 3 },
+  permalinks: permalinks(':index(pagination.idx):name.html', {
+    index: function(i) {
+      return i ? `page/${i + 1}/` : '';
+    }
+  })
+});
 
-app.archives.addIndices(pages);
-console.log(app.views.archives);
-
-// var view = app.posts
-//   .getView('a.txt')
-//   // .getView('a/b/c/a.txt')
-//   .use(permalink(':dirname/:basename'))
-
-// console.log(view.url)
+Object.keys(app.views.archives).forEach(function(key) {
+  var page = app.views.archives[key];
+  console.log(key);
+  console.log(page.data);
+  console.log();
+});
