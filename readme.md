@@ -10,6 +10,10 @@ Install with [npm](https://www.npmjs.com/):
 $ npm install --save assemble-permalinks
 ```
 
+**HEADS UPS**
+
+* 0.5.0 has a breaking change. It will no longer immediately run the permalink when used on a view directly.
+
 ## Usage
 
 ```js
@@ -30,7 +34,7 @@ app.use(permalinks());
 // create a view collection
 app.create('pages');
 
-// add a page  
+// add a page
 app.page('a/b/c.txt', {content: '...'})
   .permalink(':name.html');
 
