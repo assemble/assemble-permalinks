@@ -90,14 +90,6 @@ module.exports = function permalinksPlugin(pattern, config) {
           }
           return this;
         });
-
-        /**
-         * Support using this plugin directly on a view and passing a pattern in.
-         */
-
-        if (typeof pattern === 'string') {
-          return this.permalink.apply(this, args);
-        }
       };
 
       return viewPlugin;
