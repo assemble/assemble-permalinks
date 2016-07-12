@@ -67,7 +67,7 @@ describe('permalinks', function() {
     assert(post.data.permalink === 'aaa.html');
   });
 
-  it('should support passing the plugin to a view and executing immediately:', function() {
+  it.skip('should support passing the plugin to a view and executing immediately:', function() {
     app.create('posts');
 
     app.post('a/b/aaa.txt', {content: '...'});
