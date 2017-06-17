@@ -4,6 +4,10 @@
   "version": "0.5.0",
   "homepage": "https://github.com/assemble/assemble-permalinks",
   "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "contributors": [
+    "Brian Woodward (https://twitter.com/doowb)",
+    "Jon Schlinkert (http://twitter.com/jonschlinkert)"
+  ],
   "repository": "assemble/assemble-permalinks",
   "bugs": {
     "url": "https://github.com/assemble/assemble-permalinks/issues"
