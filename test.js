@@ -227,7 +227,7 @@ describe('permalinks', function() {
   it('should use custom parsePath option', function() {
     app.create('posts')
       .use(permalink({
-        parsePath(paths) {
+        parsePath: function(paths) {
           paths.foo = 'bar-' + paths.name;
         }
       }));
